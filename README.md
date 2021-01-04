@@ -1,4 +1,6 @@
 # Basketball-2D-NN
 Currently WIP
 
-The HTML 5 build
+WEBGL Build
+
+Link: https://kakol20.github.io/Basketball-2D-NN/
