@@ -15,8 +15,8 @@ TagManager:
   - Ball
   - Floor
   - Obstacles
-  - 
-  - 
+  - Target
+  - Exit Target
   - 
   - 
   - 
@@ -40,4 +40,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Obstacles
+    uniqueID: 3397358731
     locked: 0
