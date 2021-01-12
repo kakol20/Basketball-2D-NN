@@ -11,7 +11,7 @@ SpriteAtlas:
     serializedVersion: 2
     textureSettings:
       serializedVersion: 2
-      anisoLevel: 1
+      anisoLevel: 16
       compressionQuality: 50
       maxTextureSize: 2048
       textureCompression: 0
@@ -23,11 +23,11 @@ SpriteAtlas:
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: DefaultTexturePlatform
-      m_MaxTextureSize: 2048
+      m_MaxTextureSize: 4096
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
-      m_TextureCompression: 1
-      m_CompressionQuality: 50
+      m_TextureCompression: 2
+      m_CompressionQuality: 75
       m_CrunchedCompression: 1
       m_AllowsAlphaSplitting: 0
       m_Overridden: 0
@@ -35,7 +35,7 @@ SpriteAtlas:
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
-      padding: 8
+      padding: 4
       blockOffset: 1
       allowAlphaSplitting: 0
       enableRotation: 0
@@ -43,19 +43,19 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: b4eade1942b98ea46b2150041c8bb824, type: 3}
+    - {fileID: 2800000, guid: 8ea4105805f5c9c4fb69f64af48f6d9a, type: 3}
     - {fileID: 2800000, guid: 78b822977318f054db113801e03b0854, type: 3}
-    totalSpriteSurfaceArea: 22960
+    totalSpriteSurfaceArea: 13801
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 78b822977318f054db113801e03b0854, type: 3}
-  - {fileID: 21300000, guid: b4eade1942b98ea46b2150041c8bb824, type: 3}
+  - {fileID: 21300000, guid: 8ea4105805f5c9c4fb69f64af48f6d9a, type: 3}
   m_PackedSpriteNamesToIndex:
   - agentSprite
-  - 10-basketball-ball-png-image
+  - BallSprite
   m_RenderDataMap: {}
   m_Tag: ObjectsAtlas
   m_IsVariant: 0

@@ -703,7 +703,7 @@ MonoBehaviour:
   maxX: 4
   maxForce: 150
   agentsPrefab: {fileID: 7418899960242182791, guid: ae5acbe4f27cf374497a21d4fd90d754, type: 3}
-  ballPrefab: {fileID: 8523186604110146654, guid: 904124034498e9147ba405b3b1677605, type: 3}
+  ballPrefab: {fileID: 3885192921875145008, guid: 1b4a593f56b44e44dad1ca8c4132dbf3, type: 3}
   populationSize: 2
 --- !u!1 &1399000764
 GameObject:
