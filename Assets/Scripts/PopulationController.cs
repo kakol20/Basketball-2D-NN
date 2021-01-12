@@ -31,7 +31,7 @@ public class PopulationController : MonoBehaviour
         for (int i = 0; i < populationSize; i++)
         {
             Vector3 newPos = new Vector3(Own.Random.Range(minX, maxX), ySpawn, 0f);
-            agentPopulation.Add(Instantiate(agentsPrefab, newPos, transform.rotation));
+            agentPopulation.Add(Instantiate(agentsPrefab, newPos, transform.rotation, transform));
         }
     }
 

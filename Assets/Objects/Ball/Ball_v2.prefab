@@ -134,12 +134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a846fbfc92039642b2a878d8efff023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxWait: 5
+  exitTargetLayer:
+    serializedVersion: 2
+    m_Bits: 4096
   floorLayer:
     serializedVersion: 2
     m_Bits: 256
   targetLayer:
     serializedVersion: 2
     m_Bits: 1024
-  exitTargetLayer:
+  topTargetLayer:
     serializedVersion: 2
     m_Bits: 2048

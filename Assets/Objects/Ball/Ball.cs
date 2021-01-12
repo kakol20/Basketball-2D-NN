@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    [SerializeField] private float maxWait = 5.0f;
+    [SerializeField] private LayerMask exitTargetLayer;
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask targetLayer;
-    [SerializeField] private LayerMask exitTargetLayer;
+    [SerializeField] private LayerMask topTargetLayer;
 
+    private bool hitEntryTrigger = false;
+    private bool hitExitTrigger = false;
+    private bool hitTopTrigger = false;
+    private float timeElapsed = 0f;
     private Rigidbody2D rigidbody;
+
     public bool HitFloor { get; private set; }
     public bool HitTarget { get; private set; }
 
@@ -30,6 +37,11 @@ public class Ball : MonoBehaviour
         //{
         //    DebugGUI.LogPersistent("hitTarget", "Ball has hit not target");
         //}
+        timeElapsed += Time.deltaTime;
+
+        if (rigidbody.velocity.sqrMagnitude == 0 && rigidbody.angularVelocity == 0 && timeElapsed >= maxWait) HitFloor = true;
+
+        if (hitEntryTrigger && hitExitTrigger && hitTopTrigger) HitTarget = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -46,21 +58,32 @@ public class Ball : MonoBehaviour
     {
         if (collision.gameObject.layer == Mathf.Log(targetLayer.value, 2) && !HitTarget)
         {
-            HitTarget = true;
+            hitEntryTrigger = true;
         }
 
-        if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2) && HitTarget)
+        if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2) && !HitTarget)
         {
-            HitTarget = false;
+            hitExitTrigger = true;
+        }
+
+        if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2) && HitTarget)
+        {
+            hitTopTrigger = true;
         }
     }
 
     public void Reset()
     {
-        HitTarget = false;
         HitFloor = false;
+        HitTarget = false;
 
-        rigidbody.velocity = Vector2.zero;
+        hitEntryTrigger = false;
+        hitExitTrigger = false;
+        hitTopTrigger = false;
+
         rigidbody.angularVelocity = 0f;
+        rigidbody.velocity = Vector2.zero;
+
+        timeElapsed = 0f;
     }
 }
