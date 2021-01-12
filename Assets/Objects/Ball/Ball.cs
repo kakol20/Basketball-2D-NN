@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private LayerMask exitTargetLayer;
 
+    private Rigidbody2D rigidbody;
     public bool HitFloor { get; private set; }
     public bool HitTarget { get; private set; }
 
@@ -14,26 +15,28 @@ public class Ball : MonoBehaviour
     {
         HitFloor = false;
         HitTarget = false;
+
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (HitTarget)
-        {
-            DebugGUI.LogPersistent("hitTarget", "Ball has hit target");
-        }
-        else
-        {
-            DebugGUI.LogPersistent("hitTarget", "Ball has hit not target");
-        }
+        //if (HitTarget)
+        //{
+        //    DebugGUI.LogPersistent("hitTarget", "Ball has hit target");
+        //}
+        //else
+        //{
+        //    DebugGUI.LogPersistent("hitTarget", "Ball has hit not target");
+        //}
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2))
         {
-            DebugGUI.LogPersistent("hitFloor", "Ball has hit floor"); // for testing only
+            //DebugGUI.LogPersistent("hitFloor", "Ball has hit floor"); // for testing only
 
             HitFloor = true;
         }
@@ -50,5 +53,14 @@ public class Ball : MonoBehaviour
         {
             HitTarget = false;
         }
+    }
+
+    public void Reset()
+    {
+        HitTarget = false;
+        HitFloor = false;
+
+        rigidbody.velocity = Vector2.zero;
+        rigidbody.angularVelocity = 0f;
     }
 }
