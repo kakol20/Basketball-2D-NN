@@ -3,18 +3,30 @@ using UnityEngine;
 
 public class PopulationController : MonoBehaviour
 {
-    [Header("Spawn Area")]
-    [SerializeField] private float minX = -10f;
-    [SerializeField] private float maxX = 4f;
+    [SerializeField] private float basketX = 10f;
 
     [Header("Agents")]
     [SerializeField] private float maxForce = 10.0f;
     [SerializeField] private GameObject agentsPrefab;
     [SerializeField] private GameObject ballPrefab;
+
+    private List<GameObject> agentPopulation = new List<GameObject>();
+
+    [Header("Spawn Area")]
+    [SerializeField] private float maxX = 4f;
+    [SerializeField] private float minX = -10f;
     [SerializeField] private int populationSize = 1;
 
     private float ySpawn = -3.7f;
-    private List<GameObject> agentPopulation = new List<GameObject>();
+    private bool AllFinished()
+    {
+        foreach (GameObject item in agentPopulation)
+        {
+            if (!item.GetComponent<Agents>().IsFinished) return false;
+        }
+
+        return true;
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -24,6 +36,10 @@ public class PopulationController : MonoBehaviour
         Vector3 to = new Vector3(maxX, 0f, 0f);
 
         Gizmos.DrawLine(from, to);
+
+        Gizmos.color = Color.green;
+        //Gizmos.DrawIcon(new Vector3(basketX, 0f), "Basket X");
+        Gizmos.DrawSphere(new Vector3(basketX, 0f), 0.25f);
     }
 
     private void SpawnAgents()
@@ -32,6 +48,8 @@ public class PopulationController : MonoBehaviour
         {
             Vector3 newPos = new Vector3(Own.Random.Range(minX, maxX), ySpawn, 0f);
             agentPopulation.Add(Instantiate(agentsPrefab, newPos, transform.rotation, transform));
+
+            agentPopulation[i].GetComponent<Agents>().CreateNetwork();
         }
     }
 
@@ -47,6 +65,8 @@ public class PopulationController : MonoBehaviour
         foreach (GameObject item in agentPopulation)
         {
             item.GetComponent<Agents>().Init(ballPrefab);
+
+            item.GetComponent<Agents>().Move(minX, maxX, basketX);
             item.GetComponent<Agents>().Shoot(maxForce);
         }
     }
@@ -62,18 +82,9 @@ public class PopulationController : MonoBehaviour
             {
                 item.GetComponent<Agents>().Reset();
 
+                item.GetComponent<Agents>().Move(minX, maxX, basketX);
                 item.GetComponent<Agents>().Shoot(maxForce);
             }
         }
-    }
-
-    private bool AllFinished()
-    {
-        foreach (GameObject item in agentPopulation)
-        {
-            if (!item.GetComponent<Agents>().IsFinished) return false;
-        }
-
-        return true;
     }
 }

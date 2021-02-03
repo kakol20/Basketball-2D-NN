@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Agents : MonoBehaviour
@@ -7,6 +8,11 @@ public class Agents : MonoBehaviour
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private LayerMask floorLayer;
 
+    [Header("Neural Network")]
+    [SerializeField] private int[] layers = { 1, 3, 2 };
+
+    private NeuralNetwork neuralNetwork;
+
     private bool grounded = true;
     private float distanceToBasket = 0f;
     private Rigidbody2D rigidbody;
@@ -15,9 +21,31 @@ public class Agents : MonoBehaviour
     private GameObject currentBall;
     public bool IsFinished { get; private set; } = false;
     private bool HasShot = false;
+    public void CreateNetwork()
+    {
+        neuralNetwork = new NeuralNetwork(layers);
+
+        neuralNetwork.Randomise(0f, 1f);
+    }
+
     public void Init(GameObject ballPrefab)
     {
         currentBall = Instantiate(ballPrefab, transform.position, transform.rotation, transform);
+    }
+    public void Move(float minX, float maxX, float basketX)
+    {
+        float newX = Own.Random.Range(minX, maxX);
+
+        float distance = Mathf.Abs(basketX - newX);
+
+        float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
+
+        distanceToBasket = Own.Math.Map(newX, 0f, maxDistance, 0f, 1f);
+
+        Vector3 newPos = transform.position;
+        newPos.x = newX;
+
+        transform.position = newPos;
     }
 
     public void Reset()
@@ -27,20 +55,23 @@ public class Agents : MonoBehaviour
         //Destroy(currentBall);
         currentBall.GetComponent<Ball>().Reset();
     }
-
-    public void Move(float minX, float maxX)
-    {
-
-    }
-
     public void Shoot(float maxForce)
     {
         if (!HasShot)
         {
             currentBall.transform.position = transform.position;
 
-            float x = Own.Random.Range(0f, 1f) * maxForce;
-            float y = Own.Random.Range(0f, 1f) * maxForce;
+            //float x = Own.Random.Range(0f, 1f) * maxForce;
+            //float y = Own.Random.Range(0f, 1f) * maxForce;
+
+            // add inputs
+            List<float> input = new List<float>();
+            input.Add(distanceToBasket);
+
+            neuralNetwork.FeedForward(input.ToArray(), ActivationFunction.Sigmoid); // feed forward
+
+            float x = neuralNetwork.Output[0] * maxForce;
+            float y = neuralNetwork.Output[1] * maxForce;
 
             currentBall.GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
 

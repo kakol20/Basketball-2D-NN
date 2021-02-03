@@ -2,7 +2,7 @@
 {
     public static class Math
     {
-        public static float Constrain(float val, float low, float high)
+        private static float Constrain(float val, float low, float high)
         {
             return UnityEngine.Mathf.Clamp(val, low, high);
             //return UnityEngine.Mathf.Max(UnityEngine.Mathf.Min(val, high), low);
