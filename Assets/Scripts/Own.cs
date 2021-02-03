@@ -31,6 +31,7 @@
         /// Set Random Seed
         /// </summary>
         public static void Init() => UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
+        public static void Init(int seed) => UnityEngine.Random.InitState(seed);
 
         /// <summary>
         /// Randomisation between min and max

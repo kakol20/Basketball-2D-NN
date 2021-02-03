@@ -55,23 +55,23 @@ public class NeuralNetwork
     /// <summary>
     /// Mutate Neural Network and clamp it between min and max
     /// </summary>
-    /// <param name="mutationRate"></param>
     /// <param name="min"></param>
     /// <param name="max"></param>
-    public void Mutate(float min, float max, float chance)
+    /// <param name="mutationRate"></param>
+    public void Mutate(float min, float max, float mutationRate)
     {
         foreach (Matrix item in Biases)
         {
-            item.Mutate(min, max, chance);
+            item.Mutate(min, max, mutationRate);
 
-            item.Clamp(-1, 1);
+            item.Clamp(min, max);
         }
 
         foreach (Matrix item in Weights)
         {
-            item.Mutate(min, max, chance);
+            item.Mutate(min, max, mutationRate);
 
-            item.Clamp(-1, 1);
+            item.Clamp(min, max);
         }
     }
     public List<float> Output
@@ -111,7 +111,26 @@ public class NeuralNetwork
             Neurons[i + 1].Add(Biases[i]);
 
             Neurons[i + 1].Activation(activation);
-            Neurons[i + 1].Clamp(-1, 1);
+            //Neurons[i + 1].Clamp(-1, 1);
+
+            switch (activation)
+            {
+                case ActivationFunction.Tanh:
+                    Neurons[i + 1].Clamp(-1, 1);
+
+                    break;
+                case ActivationFunction.Sigmoid:
+                    Neurons[i + 1].Clamp(0, 1);
+
+                    break;
+                case ActivationFunction.ReLU:
+                    Neurons[i + 1].Clamp(0, float.MaxValue);
+                    break;
+                case ActivationFunction.LeakyReLU:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

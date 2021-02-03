@@ -68,27 +68,6 @@ public class Matrix
         }
     }
 
-    /// <summary>
-    /// utate matrix and clamp it to min and max
-    /// </summary>
-    /// <param name="mutationRate"></param>
-    /// <param name="min"></param>
-    /// <param name="max"></param>
-    public void Mutate(float min, float max, float chance)
-    {
-        for (int x = 0; x < Cols; x++)
-        {
-            for (int y = 0; y < Rows; y++)
-            {
-                //float chance = Own.Random.Range();
-
-                float change = Own.Random.Range(min, max);
-                bool mutate = Own.Random.Range(0, 1) <= chance;
-
-                Array[x][y] += mutate ? change : 0.0f;
-            }
-        }
-    }
     public void Add(Matrix otherMatrix)
     {
         if (Cols == otherMatrix.Cols && Rows == otherMatrix.Rows)
@@ -194,6 +173,7 @@ public class Matrix
             Array.Clear();
         }
     }
+
     public void Multiply(Matrix otherMatrix)
     {
         if (Cols != otherMatrix.Rows)
@@ -247,6 +227,27 @@ public class Matrix
         }
     }
 
+    /// <summary>
+    /// Mutate matrix and clamp it to min and max
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <param name="mutationRate"></param>
+    public void Mutate(float min, float max, float mutationRate)
+    {
+        for (int x = 0; x < Cols; x++)
+        {
+            for (int y = 0; y < Rows; y++)
+            {
+                //float chance = Own.Random.Range();
+
+                float change = Own.Random.Range(min, max);
+                bool mutate = Own.Random.Range(0, 1) <= mutationRate;
+
+                Array[x][y] += mutate ? change : 0.0f;
+            }
+        }
+    }
     public void Randomise(float min, float max)
     {
         for (int x = 0; x < Cols; x++)
