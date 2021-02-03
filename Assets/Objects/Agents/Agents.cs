@@ -8,6 +8,7 @@ public class Agents : MonoBehaviour
     [SerializeField] private LayerMask floorLayer;
 
     private bool grounded = true;
+    private float distanceToBasket = 0f;
     private Rigidbody2D rigidbody;
 
     // shooting
@@ -25,6 +26,11 @@ public class Agents : MonoBehaviour
 
         //Destroy(currentBall);
         currentBall.GetComponent<Ball>().Reset();
+    }
+
+    public void Move(float minX, float maxX)
+    {
+
     }
 
     public void Shoot(float maxForce)
