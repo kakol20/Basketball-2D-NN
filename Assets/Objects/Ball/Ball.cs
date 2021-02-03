@@ -48,6 +48,8 @@ public class Ball : MonoBehaviour
 
         if (rb.velocity.sqrMagnitude == 0 && rb.angularVelocity == 0 && timeElapsed >= maxWait) HitFloor = true;
 
+        if (timeElapsed >= 24f) HitFloor = true;
+
         //if (hitEntryTrigger && hitExitTrigger && hitTopTrigger) HitTarget = true;
 
         if (hitOrder.Count >= 3)
