@@ -12,7 +12,7 @@ public class Ball : MonoBehaviour
     private bool hitExitTrigger = false;
     private bool hitTopTrigger = false;
     private float timeElapsed = 0f;
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rb;
 
     public bool HitFloor { get; private set; }
     public bool HitTarget { get; private set; }
@@ -23,7 +23,7 @@ public class Ball : MonoBehaviour
         HitFloor = false;
         HitTarget = false;
 
-        rigidbody = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -39,7 +39,7 @@ public class Ball : MonoBehaviour
         //}
         timeElapsed += Time.deltaTime;
 
-        if (rigidbody.velocity.sqrMagnitude == 0 && rigidbody.angularVelocity == 0 && timeElapsed >= maxWait) HitFloor = true;
+        if (rb.velocity.sqrMagnitude == 0 && rb.angularVelocity == 0 && timeElapsed >= maxWait) HitFloor = true;
 
         if (hitEntryTrigger && hitExitTrigger && hitTopTrigger) HitTarget = true;
     }
@@ -81,8 +81,8 @@ public class Ball : MonoBehaviour
         hitExitTrigger = false;
         hitTopTrigger = false;
 
-        rigidbody.angularVelocity = 0f;
-        rigidbody.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.velocity = Vector2.zero;
 
         timeElapsed = 0f;
     }

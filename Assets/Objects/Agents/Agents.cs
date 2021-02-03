@@ -15,7 +15,7 @@ public class Agents : MonoBehaviour
 
     private bool grounded = true;
     private float distanceToBasket = 0f;
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rb;
 
     // shooting
     private GameObject currentBall;
@@ -89,17 +89,17 @@ public class Agents : MonoBehaviour
         //DebugGUI.LogPersistent("hAxis", "Horizontal Axis: " + Input.GetAxis("Horizontal").ToString("F2"));
         //DebugGUI.LogPersistent("vAxis", "Vertical Axis: " + Input.GetAxis("Vertical").ToString("F2"));
 
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f) rigidbody.AddRelativeForce(new Vector2(1, 0) * speed * Mathf.Round(Input.GetAxis("Horizontal")));
+        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f) rb.AddRelativeForce(new Vector2(1, 0) * speed * Mathf.Round(Input.GetAxis("Horizontal")));
 
-        if (Input.GetAxis("Vertical") > 0 && grounded) rigidbody.AddRelativeForce(new Vector2(0, 1) * jumpForce);
+        if (Input.GetAxis("Vertical") > 0 && grounded) rb.AddRelativeForce(new Vector2(0, 1) * jumpForce);
 
-        Vector2 oldVelocity = rigidbody.velocity;
+        Vector2 oldVelocity = rb.velocity;
         oldVelocity.y = 0;
 
         if (Mathf.Abs(oldVelocity.x) > maxHorizontalVelocity)
         {
             oldVelocity.Normalize();
-            rigidbody.velocity = new Vector2(oldVelocity.x * maxHorizontalVelocity, rigidbody.velocity.y);
+            rb.velocity = new Vector2(oldVelocity.x * maxHorizontalVelocity, rb.velocity.y);
         }
     }
 
@@ -126,7 +126,7 @@ public class Agents : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
