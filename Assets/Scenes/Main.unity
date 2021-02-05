@@ -1039,7 +1039,7 @@ MonoBehaviour:
   mutationRate: 0.25
   incrementalPlacementLevel: 5
   randomPlacementLevel: 10
-  seed: 31337
+  seed: 1337
 --- !u!1 &1399000764
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,11 +5,12 @@ public class Agents : MonoBehaviour
 {
     [SerializeField] private float jumpForce = 320.0f;
     [SerializeField] private float maxHorizontalVelocity = 1.34f;
+    [SerializeField] private float maxSpin = 180f; // in degrees
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private LayerMask floorLayer;
 
     [Header("Neural Network")]
-    [SerializeField] private int[] layers = { 1, 3, 2 };
+    [SerializeField] private int[] layers = { 1, 3, 3 };
 
     //private NeuralNetwork NeuralNetwork;
     public NeuralNetwork NN { get; private set; }
@@ -115,6 +116,7 @@ public class Agents : MonoBehaviour
             float y = Own.Math.Map(NN.Output[1], -1f, 1f, 0f, 1f, true) * maxForce;
 
             currentBall.GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
+            currentBall.GetComponent<Rigidbody2D>().angularVelocity = NN.Output[2] * maxSpin;
 
             HasShot = true;
             IsFinished = false;

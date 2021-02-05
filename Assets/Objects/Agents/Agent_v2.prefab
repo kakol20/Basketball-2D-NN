@@ -146,7 +146,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 320
   maxHorizontalVelocity: 1.78816
+  maxSpin: 720
   speed: 20
   floorLayer:
     serializedVersion: 2
     m_Bits: 256
+  layers: 010000000400000003000000
