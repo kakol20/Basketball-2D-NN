@@ -1036,8 +1036,9 @@ MonoBehaviour:
   maxX: 4
   minX: -10
   populationSize: 50
-  mutationRate: 0.1
-  scoreUntilRandomisation: 5
+  mutationRate: 0.25
+  incrementalPlacementLevel: 5
+  randomPlacementLevel: 10
   seed: 31337
 --- !u!1 &1399000764
 GameObject:

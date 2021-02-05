@@ -12,7 +12,7 @@ public class Agents : MonoBehaviour
     [SerializeField] private int[] layers = { 1, 3, 2 };
 
     //private NeuralNetwork NeuralNetwork;
-    public NeuralNetwork NN { get; private set; } 
+    public NeuralNetwork NN { get; private set; }
 
     private bool grounded = true;
     private float distanceToBasket = 0f;
@@ -32,12 +32,46 @@ public class Agents : MonoBehaviour
         NN.Randomise(-1f, 1f);
     }
 
+    /// <summary>
+    /// Incrementally change X value by 1 
+    /// </summary>
+    /// <param name="minX"></param>
+    /// <param name="maxX"></param>
+    /// <param name="basketX"></param>
+    public void IncrementMove(float minX, float maxX, float basketX)
+    {
+        float newX = transform.position.x + 1;
+
+        if (newX > maxX) newX = minX;
+
+        float distance = Mathf.Abs(basketX - newX);
+
+        float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
+
+        distanceToBasket = Own.Math.Map(distance, 0f, maxDistance, -1f, 1f);
+
+        Vector3 newPos = transform.position;
+        newPos.x = newX;
+
+        transform.position = newPos;
+    }
+
     public void Init(GameObject ballPrefab)
     {
         currentBall = Instantiate(ballPrefab, transform.position, transform.rotation, transform);
     }
+    //private void CalculateDistanceToBasket(float basketX, float newX)
+    //{
 
-    public void Move(float minX, float maxX, float basketX)
+    //}
+
+    /// <summary>
+    /// Move at random X Values
+    /// </summary>
+    /// <param name="minX"></param>
+    /// <param name="maxX"></param>
+    /// <param name="basketX"></param>
+    public void RandomMove(float minX, float maxX, float basketX)
     {
         float newX = Own.Random.Range(minX, maxX);
 

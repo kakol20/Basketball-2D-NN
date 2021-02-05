@@ -23,7 +23,8 @@ public class PopulationController : MonoBehaviour
 
     [Header("Training")]
     [SerializeField] [Range(0, 1)] private float mutationRate = 0.1f;
-    [SerializeField] private float scoreUntilRandomisation = 5f;
+    [SerializeField] private float incrementalPlacementLevel = 5f;
+    [SerializeField] private float randomPlacementLevel = 25f;
     [SerializeField] private int seed = 1337;
 
     private int maxAttempts = 1;
@@ -134,20 +135,27 @@ public class PopulationController : MonoBehaviour
         DebugGUI.LogPersistent("generation", "Generation: " + generation.ToString("F0"));
     }
 
-    private void Shoot(GameObject item)
+    private void Shoot(GameObject agent)
     {
-        item.GetComponent<Agents>().Reset();
+        agent.GetComponent<Agents>().Reset();
 
-        if (maxAttempts >= scoreUntilRandomisation) item.GetComponent<Agents>().Move(minX, maxX, basketX);
+        if (maxAttempts > randomPlacementLevel)
+        {
+            agent.GetComponent<Agents>().RandomMove(minX, maxX, basketX);
+        }
+        else if (maxAttempts > incrementalPlacementLevel)
+        {
+            agent.GetComponent<Agents>().IncrementMove(minX, maxX, basketX);
+        }
 
-        item.GetComponent<Agents>().Shoot(maxForce);
+        agent.GetComponent<Agents>().Shoot(maxForce);
     }
 
     // Update is called once per frame
     private void Update()
     {
         DebugGUI.LogPersistent("fps", "FPS: " + (1.0f / Time.deltaTime).ToString("F0"));
-        DebugGUI.LogPersistent("attempt", "Attemp: " + attempt.ToString());
+        DebugGUI.LogPersistent("attempt", "Attempt: " + attempt.ToString());
 
         if (AllFinished())
         {
