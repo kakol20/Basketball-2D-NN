@@ -20,11 +20,13 @@ public class Agents : MonoBehaviour
 
     // shooting
     private GameObject currentBall;
+
     private bool HasShot = false;
 
     public int Attempts { get; private set; }
     public bool IsFinished { get; private set; } = false;
     public int Score { get; private set; }
+
     public void CreateNetwork()
     {
         NN = new NeuralNetwork(layers);
@@ -33,7 +35,7 @@ public class Agents : MonoBehaviour
     }
 
     /// <summary>
-    /// Incrementally change X value by 1 
+    /// Incrementally change X value by 1
     /// </summary>
     /// <param name="minX"></param>
     /// <param name="maxX"></param>
@@ -44,11 +46,7 @@ public class Agents : MonoBehaviour
 
         if (newX > maxX) newX = minX;
 
-        float distance = Mathf.Abs(basketX - newX);
-
-        float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
-
-        distanceToBasket = Own.Math.Map(distance, 0f, maxDistance, -1f, 1f);
+        CalculateDistanceToBasket(basketX, newX, minX, maxX);
 
         Vector3 newPos = transform.position;
         newPos.x = newX;
@@ -56,14 +54,13 @@ public class Agents : MonoBehaviour
         transform.position = newPos;
     }
 
-    public void Init(GameObject ballPrefab)
+    public void Init(GameObject ballPrefab, float basketX, float startX, float minX, float maxX)
     {
         currentBall = Instantiate(ballPrefab, transform.position, transform.rotation, transform);
-    }
-    //private void CalculateDistanceToBasket(float basketX, float newX)
-    //{
 
-    //}
+        // calculate distance
+        CalculateDistanceToBasket(basketX, startX, minX, maxX);
+    }
 
     /// <summary>
     /// Move at random X Values
@@ -75,11 +72,7 @@ public class Agents : MonoBehaviour
     {
         float newX = Own.Random.Range(minX, maxX);
 
-        float distance = Mathf.Abs(basketX - newX);
-
-        float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
-
-        distanceToBasket = Own.Math.Map(distance, 0f, maxDistance, -1f, 1f);
+        CalculateDistanceToBasket(basketX, newX, minX, maxX);
 
         Vector3 newPos = transform.position;
         newPos.x = newX;
@@ -100,6 +93,7 @@ public class Agents : MonoBehaviour
         Score = 0;
         Attempts = 0;
     }
+
     public void Shoot(float maxForce)
     {
         if (!HasShot)
@@ -127,10 +121,19 @@ public class Agents : MonoBehaviour
         }
     }
 
+    private void CalculateDistanceToBasket(float basketX, float newX, float minX, float maxX)
+    {
+        float distance = Mathf.Abs(basketX - newX);
+
+        float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
+
+        distanceToBasket = Own.Math.Map(distance, 0f, maxDistance, -1f, 1f);
+    }
     private void FixedUpdate()
     {
         ManualMove();
     }
+
     private void ManualMove()
     {
         //DebugGUI.LogPersistent("hAxis", "Horizontal Axis: " + Input.GetAxis("Horizontal").ToString("F2"));

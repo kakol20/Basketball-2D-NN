@@ -54,7 +54,12 @@ public class Ball : MonoBehaviour
 
         if (hitOrder.Count >= 3)
         {
-            if (hitOrder[0] == Target.Top && hitOrder[1] == Target.Mid && hitOrder[2] == Target.Exit) HitTarget = true;
+            if (hitOrder[0] == Target.Top) // ball must hit top first
+            {
+                int last = hitOrder.Count - 1;
+
+                if (hitOrder[last] == Target.Exit && hitOrder[last - 1] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
+            }
         }
     }
 

@@ -21,6 +21,8 @@ public class PopulationController : MonoBehaviour
     [SerializeField] private float minX = -10f;
     [SerializeField] private int populationSize = 1;
 
+    private float startX = 0f;
+
     [Header("Training")]
     [SerializeField] [Range(0, 1)] private float mutationRate = 0.1f;
     [SerializeField] private float incrementalPlacementLevel = 5f;
@@ -119,11 +121,13 @@ public class PopulationController : MonoBehaviour
 
         Own.Random.Init(seed);
 
+        startX = (minX + maxX) / 2f;
+
         SpawnAgents();
 
         foreach (GameObject item in agentPopulation)
         {
-            item.GetComponent<Agents>().Init(ballPrefab);
+            item.GetComponent<Agents>().Init(ballPrefab, basketX, startX, minX, maxX);
 
             //item.GetComponent<Agents>().Move(minX, maxX, basketX);
             item.GetComponent<Agents>().Shoot(maxForce);

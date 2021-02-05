@@ -1029,7 +1029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3d2ce256eb11441b41ee5424da3f5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basketX: 4
+  basketX: 5.5
   maxForce: 150
   agentsPrefab: {fileID: 7418899960242182791, guid: ae5acbe4f27cf374497a21d4fd90d754, type: 3}
   ballPrefab: {fileID: 3885192921875145008, guid: 1b4a593f56b44e44dad1ca8c4132dbf3, type: 3}
