@@ -37,7 +37,7 @@ namespace UnityLibrary
         {
             //Vector2's for the corners of the screen
             Vector2 bottomLeft = cam.ScreenToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-            Vector2 topRight = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth, cam.pixelHeight, cam.nearClipPlane));
+            Vector2 topRight = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth, cam.pixelHeight + 100f, cam.nearClipPlane));
             Vector2 topLeft = new Vector2(bottomLeft.x, topRight.y);
             Vector2 bottomRight = new Vector2(topRight.x, bottomLeft.y);
 
@@ -53,23 +53,23 @@ namespace UnityLibrary
 
         //Use this if you want a single function to handle everything (less efficient)
         //You can just ignore/delete the rest of this class if thats the case
-        void StandaloneAddCollider()
-        {
-            if (Camera.main == null) { Debug.LogError("Camera.main not found, failed to create edge colliders"); return; }
+        //void StandaloneAddCollider()
+        //{
+        //    if (Camera.main == null) { Debug.LogError("Camera.main not found, failed to create edge colliders"); return; }
 
-            var cam = Camera.main;
-            if (!cam.orthographic) { Debug.LogError("Camera.main is not Orthographic, failed to create edge colliders"); return; }
+        //    var cam = Camera.main;
+        //    if (!cam.orthographic) { Debug.LogError("Camera.main is not Orthographic, failed to create edge colliders"); return; }
 
-            Vector2 bottomLeft = cam.ScreenToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-            Vector2 topRight = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth, cam.pixelHeight, cam.nearClipPlane));
-            Vector2 topLeft = new Vector2(bottomLeft.x, topRight.y);
-            Vector2 bottomRight = new Vector2(topRight.x, bottomLeft.y);
+        //    Vector2 bottomLeft = cam.ScreenToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
+        //    Vector2 topRight = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth, cam.pixelHeight, cam.nearClipPlane));
+        //    Vector2 topLeft = new Vector2(bottomLeft.x, topRight.y);
+        //    Vector2 bottomRight = new Vector2(topRight.x, bottomLeft.y);
 
-            // add or use existing EdgeCollider2D
-            var edge = GetComponent<EdgeCollider2D>() == null ? gameObject.AddComponent<EdgeCollider2D>() : GetComponent<EdgeCollider2D>();
+        //    // add or use existing EdgeCollider2D
+        //    var edge = GetComponent<EdgeCollider2D>() == null ? gameObject.AddComponent<EdgeCollider2D>() : GetComponent<EdgeCollider2D>();
 
-            var edgePoints = new[] { bottomLeft, topLeft, topRight, bottomRight, bottomLeft };
-            edge.points = edgePoints;
-        }
+        //    var edgePoints = new[] { bottomLeft, topLeft, topRight, bottomRight, bottomLeft };
+        //    edge.points = edgePoints;
+        //}
     }
 }
