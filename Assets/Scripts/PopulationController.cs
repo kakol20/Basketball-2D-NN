@@ -8,7 +8,6 @@ public class PopulationController : MonoBehaviour
 
     [Header("Agents")]
     [SerializeField] private float maxForce = 10.0f;
-
     [SerializeField] private GameObject agentsPrefab;
     [SerializeField] private GameObject ballPrefab;
 
@@ -17,7 +16,6 @@ public class PopulationController : MonoBehaviour
 
     [Header("Spawn Area")]
     [SerializeField] private float maxX = 4f;
-
     [SerializeField] private float minX = -10f;
     [SerializeField] private int populationSize = 1;
 
@@ -33,6 +31,10 @@ public class PopulationController : MonoBehaviour
     private int generation = 1;
     private int attempt = 1;
 
+    /// <summary>
+    /// Checks if all agents finish shooting
+    /// </summary>
+    /// <returns></returns>
     private bool AllFinished()
     {
         foreach (GameObject item in agentPopulation)
@@ -43,6 +45,9 @@ public class PopulationController : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Copy best top half
+    /// </summary>
     private void CopyBest()
     {
         int half = agentPopulation.Count / 2;
@@ -53,13 +58,41 @@ public class PopulationController : MonoBehaviour
             agentPopulation[i + half].GetComponent<Agents>().NN.CopyNetwork(agentPopulation[i].GetComponent<Agents>().NN);
 
             // ----- MUTATE -----
-            float chance = Own.Random.Range();
-
-            if (chance <= mutationRate)
-            {
-                agentPopulation[i + half].GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
-            }
+            agentPopulation[i + half].GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
         }
+    }
+
+    /// <summary>
+    /// Copy outlier if the best is an outlier to worst agents
+    /// </summary>
+    /// <returns></returns>
+    private bool CopyOutlier()
+    {
+        float limit = (populationSize / 2f) - 1f;
+
+        // ----- QUARTILES -----
+        float Q3 = GetScore((1 / 3f) * limit);
+        float Q1 = GetScore(limit);
+
+        float IQR = Q3 - Q1;
+
+        // ----- CHECK OUTLIER -----
+        float outlier = Q3 + 1.5f * IQR;
+
+        if (GetScore(0) > outlier)
+        {
+            // ----- COPY OUTLIER TO WORST AGENTS -----
+            for (int i = agentPopulation.Count / 2; i < agentPopulation.Count; i++)
+            {
+                agentPopulation[i].GetComponent<Agents>().NN.CopyNetwork(agentPopulation[0].GetComponent<Agents>().NN);
+
+                agentPopulation[i].GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -72,9 +105,9 @@ public class PopulationController : MonoBehaviour
 
         if (agentPopulation[0].GetComponent<Agents>().Attempts >= maxAttempts)
         {
-            if (agentPopulation[0].GetComponent<Agents>().Score >= maxAttempts) maxAttempts++;
+            if (GetScore(0) >= maxAttempts) maxAttempts++;
 
-            DebugGUI.Graph("score", agentPopulation[0].GetComponent<Agents>().Score);
+            DebugGUI.Graph("score", GetScore(0));
 
             generation++;
 
@@ -84,6 +117,26 @@ public class PopulationController : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Get floating point of score based on float index
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    private float GetScore(float index)
+    {
+        if (index % 1 != 0)
+        {
+            int tmp1 = Mathf.FloorToInt(index);
+            int tmp2 = Mathf.CeilToInt(index);
+
+            return (agentPopulation[tmp1].GetComponent<Agents>().Score + (float)agentPopulation[tmp2].GetComponent<Agents>().Score) / 2f;
+        }
+        else
+        {
+            return agentPopulation[(int)index].GetComponent<Agents>().Score;
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -98,6 +151,22 @@ public class PopulationController : MonoBehaviour
         Gizmos.color = Color.green;
         //Gizmos.DrawIcon(new Vector3(basketX, 0f), "Basket X");
         Gizmos.DrawSphere(new Vector3(basketX, 0f), 0.25f);
+    }
+
+    private void Shoot(GameObject agent)
+    {
+        agent.GetComponent<Agents>().Reset();
+
+        if (maxAttempts > randomPlacementLevel)
+        {
+            agent.GetComponent<Agents>().RandomMove(minX, maxX, basketX);
+        }
+        else if (maxAttempts > incrementalPlacementLevel)
+        {
+            agent.GetComponent<Agents>().IncrementMove(minX, maxX, basketX);
+        }
+
+        agent.GetComponent<Agents>().Shoot(maxForce);
     }
 
     private void SpawnAgents()
@@ -139,22 +208,6 @@ public class PopulationController : MonoBehaviour
         DebugGUI.LogPersistent("generation", "Generation: " + generation.ToString("F0"));
     }
 
-    private void Shoot(GameObject agent)
-    {
-        agent.GetComponent<Agents>().Reset();
-
-        if (maxAttempts > randomPlacementLevel)
-        {
-            agent.GetComponent<Agents>().RandomMove(minX, maxX, basketX);
-        }
-        else if (maxAttempts > incrementalPlacementLevel)
-        {
-            agent.GetComponent<Agents>().IncrementMove(minX, maxX, basketX);
-        }
-
-        agent.GetComponent<Agents>().Shoot(maxForce);
-    }
-
     // Update is called once per frame
     private void Update()
     {
@@ -165,7 +218,7 @@ public class PopulationController : MonoBehaviour
         {
             if (GenFinished())
             {
-                CopyBest();
+                if (!CopyOutlier()) CopyBest();
 
                 foreach (GameObject item in agentPopulation)
                 {
