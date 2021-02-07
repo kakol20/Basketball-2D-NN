@@ -24,6 +24,64 @@ public class Ball : MonoBehaviour
     public bool HitFloor { get; private set; }
     public bool HitTarget { get; private set; }
 
+    public void Reset()
+    {
+        HitFloor = false;
+        HitTarget = false;
+
+        //hitEntryTrigger = false;
+        //hitExitTrigger = false;
+        //hitTopTrigger = false;
+        hitOrder.Clear();
+
+        rb.angularVelocity = 0f;
+        rb.velocity = Vector2.zero;
+
+        timeElapsed = 0f;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2) && !HitFloor)
+        {
+            //DebugGUI.LogPersistent("hitFloor", "Ball has hit floor"); // for testing only
+
+            HitFloor = true;
+
+            rb.velocity /= 2f;
+            rb.angularVelocity /= 2f;
+        }
+    }
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //if (collision.gameObject.layer == Mathf.Log(targetLayer.value, 2) && !HitTarget)
+    //    //{
+    //    //    hitEntryTrigger = true;
+    //    //}
+
+    //    //if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2) && !HitTarget)
+    //    //{
+    //    //    hitExitTrigger = true;
+    //    //}
+
+    //    //if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2) && HitTarget)
+    //    //{
+    //    //    hitTopTrigger = true;
+    //    //}
+
+    //    //if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2)) hitOrder.Add(Target.Top);
+    //    //if (collision.gameObject.layer == Mathf.Log(midTargetLayer.value, 2)) hitOrder.Add(Target.Mid);
+    //    //if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
+    //}
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2)) hitOrder.Add(Target.Top);
+        if (collision.gameObject.layer == Mathf.Log(midTargetLayer.value, 2)) hitOrder.Add(Target.Mid);
+        if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
+    }
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -58,62 +116,10 @@ public class Ball : MonoBehaviour
             {
                 int last = hitOrder.Count - 1;
 
-                if (/*hitOrder[last] == Target.Exit &&*/ hitOrder[last] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
+                //if (hitOrder[last] == Target.Exit && hitOrder[last - 1] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
+
+                if (hitOrder[last] == Target.Mid) HitTarget = true;
             }
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2) && !HitFloor)
-        {
-            //DebugGUI.LogPersistent("hitFloor", "Ball has hit floor"); // for testing only
-
-            HitFloor = true;
-
-            rb.velocity /= 2f;
-            rb.angularVelocity /= 2f;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //if (collision.gameObject.layer == Mathf.Log(targetLayer.value, 2) && !HitTarget)
-        //{
-        //    hitEntryTrigger = true;
-        //}
-
-        //if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2) && !HitTarget)
-        //{
-        //    hitExitTrigger = true;
-        //}
-
-        //if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2) && HitTarget)
-        //{
-        //    hitTopTrigger = true;
-        //}
-
-        if (!HitFloor)
-        {
-            if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2)) hitOrder.Add(Target.Top);
-            if (collision.gameObject.layer == Mathf.Log(midTargetLayer.value, 2)) hitOrder.Add(Target.Mid);
-            if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
-        }
-    }
-
-    public void Reset()
-    {
-        HitFloor = false;
-        HitTarget = false;
-
-        //hitEntryTrigger = false;
-        //hitExitTrigger = false;
-        //hitTopTrigger = false;
-        hitOrder.Clear();
-
-        rb.angularVelocity = 0f;
-        rb.velocity = Vector2.zero;
-
-        timeElapsed = 0f;
     }
 }
