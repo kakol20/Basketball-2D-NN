@@ -21,12 +21,12 @@ public class LoadMain : MonoBehaviour
 
         print(StaticManager.Seed);
 
-        StartCoroutine(LoadMainSceneAsync());
-
         for (int i = 0; i < toShow.Length; i++)
         {
             toShow[i].SetActive(true);
         }
+
+        StartCoroutine(LoadMainSceneAsync());
 
         //for (int i = 0; i < toHide.Length; i++)
         //{
