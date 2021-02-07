@@ -58,7 +58,7 @@ public class Ball : MonoBehaviour
             {
                 int last = hitOrder.Count - 1;
 
-                if (hitOrder[last] == Target.Exit && hitOrder[last - 1] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
+                if (/*hitOrder[last] == Target.Exit &&*/ hitOrder[last] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
             }
         }
     }

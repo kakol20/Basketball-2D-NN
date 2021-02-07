@@ -427,7 +427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &673708412
 Transform:
   m_ObjectHideFlags: 0
@@ -658,7 +658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &796531370
 Transform:
   m_ObjectHideFlags: 0
@@ -876,7 +876,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1307973616
 Transform:
   m_ObjectHideFlags: 0
@@ -1039,7 +1039,6 @@ MonoBehaviour:
   mutationRate: 0.25
   incrementalPlacementLevel: 5
   randomPlacementLevel: 10
-  seed: 1337
 --- !u!1 &1399000764
 GameObject:
   m_ObjectHideFlags: 0
