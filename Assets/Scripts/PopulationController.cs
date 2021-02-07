@@ -25,7 +25,7 @@ public class PopulationController : MonoBehaviour
     [SerializeField] [Range(0, 1)] private float mutationRate = 0.1f;
     [SerializeField] private float incrementalPlacementLevel = 5f;
     [SerializeField] private float randomPlacementLevel = 25f;
-    [SerializeField] private int seed = 1337;
+    //[SerializeField] private int seed = 1337;
 
     private int maxAttempts = 1;
     private int generation = 1;
@@ -188,7 +188,7 @@ public class PopulationController : MonoBehaviour
         DebugGUI.LogPersistent("fps", "FPS: " + (1.0f / Time.deltaTime).ToString("F0"));
         DebugGUI.SetGraphProperties("score", "Score", 0, 0, 0, Color.red, true);
 
-        Own.Random.Init(seed);
+        Own.Random.Init(StaticManager.Seed);
 
         startX = (minX + maxX) / 2f;
 
