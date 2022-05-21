@@ -12,7 +12,7 @@ public class PopulationController : MonoBehaviour
     [SerializeField] private GameObject ballPrefab;
 
     private readonly float ySpawn = -3.7f;
-    public static List<GameObject> agentPopulation = new();
+    private List<GameObject> agentPopulation = new();
     private Agents bestAgent;
 
     [Header("Spawn Area")]
@@ -88,7 +88,7 @@ public class PopulationController : MonoBehaviour
             for (int i = agentPopulation.Count / 2; i < agentPopulation.Count; i++)
             {
                 Agents iAgent = agentPopulation[i].GetComponent<Agents>();
-                iAgent.NN.CopyNetwork(agentPopulation[0].GetComponent<Agents>().NN);
+                iAgent.NN.CopyNetwork(bestAgent.NN);
 
                 iAgent.NN.Mutate(-1f, 1f, mutationRate);
             }
