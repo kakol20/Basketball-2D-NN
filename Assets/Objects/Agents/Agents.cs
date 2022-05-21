@@ -26,7 +26,7 @@ public class Agents : MonoBehaviour
 
     public int Attempts { get; private set; }
     public bool IsFinished { get; private set; } = false;
-    public int Score { get; private set; }
+    public float Score { get; private set; }
 
     public void CreateNetwork()
     {
@@ -105,7 +105,7 @@ public class Agents : MonoBehaviour
             //float y = Own.Random.Range(0f, 1f) * maxForce;
 
             // add inputs
-            List<float> input = new List<float>
+            List<float> input = new()
             {
                 distanceToBasket
             };
@@ -141,7 +141,7 @@ public class Agents : MonoBehaviour
         //DebugGUI.LogPersistent("hAxis", "Horizontal Axis: " + Input.GetAxis("Horizontal").ToString("F2"));
         //DebugGUI.LogPersistent("vAxis", "Vertical Axis: " + Input.GetAxis("Vertical").ToString("F2"));
 
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f) rb.AddRelativeForce(new Vector2(1, 0) * speed * Mathf.Round(Input.GetAxis("Horizontal")));
+        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f) rb.AddRelativeForce(Mathf.Round(Input.GetAxis("Horizontal")) * speed * new Vector2(1, 0));
 
         if (Input.GetAxis("Vertical") > 0 && grounded) rb.AddRelativeForce(new Vector2(0, 1) * jumpForce);
 
@@ -195,7 +195,10 @@ public class Agents : MonoBehaviour
 
                 Attempts++;
 
-                if (currentBall.GetComponent<Ball>().HitTarget) Score++;
+                if (currentBall.GetComponent<Ball>().HitTarget)
+                {
+                    Score += 1 + currentBall.GetComponent<Ball>().ScoreOffset;
+                }
             }
         }
     }

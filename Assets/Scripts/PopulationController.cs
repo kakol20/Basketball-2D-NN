@@ -12,7 +12,8 @@ public class PopulationController : MonoBehaviour
     [SerializeField] private GameObject ballPrefab;
 
     private readonly float ySpawn = -3.7f;
-    private List<GameObject> agentPopulation = new List<GameObject>();
+    public static List<GameObject> agentPopulation = new();
+    private Agents bestAgent;
 
     [Header("Spawn Area")]
     [SerializeField] private float maxX = 4f;
@@ -22,7 +23,7 @@ public class PopulationController : MonoBehaviour
     private float startX = 0f;
 
     [Header("Training")]
-    [SerializeField] [Range(0, 1)] private float mutationRate = 0.1f;
+    [SerializeField][Range(0, 1)] private float mutationRate = 0.1f;
     [SerializeField] private float incrementalPlacementLevel = 5f;
     [SerializeField] private float randomPlacementLevel = 25f;
     //[SerializeField] private int seed = 1337;
@@ -54,11 +55,13 @@ public class PopulationController : MonoBehaviour
 
         for (int i = 0; i < half; i++)
         {
+            Agents iHalf = agentPopulation[i + half].GetComponent<Agents>();
+
             // ----- COPY BEST -----
-            agentPopulation[i + half].GetComponent<Agents>().NN.CopyNetwork(agentPopulation[i].GetComponent<Agents>().NN);
+            iHalf.NN.CopyNetwork(agentPopulation[i].GetComponent<Agents>().NN);
 
             // ----- MUTATE -----
-            agentPopulation[i + half].GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
+            iHalf.GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
         }
     }
 
@@ -84,9 +87,10 @@ public class PopulationController : MonoBehaviour
             // ----- COPY OUTLIER TO WORST AGENTS -----
             for (int i = agentPopulation.Count / 2; i < agentPopulation.Count; i++)
             {
-                agentPopulation[i].GetComponent<Agents>().NN.CopyNetwork(agentPopulation[0].GetComponent<Agents>().NN);
+                Agents iAgent = agentPopulation[i].GetComponent<Agents>();
+                iAgent.NN.CopyNetwork(agentPopulation[0].GetComponent<Agents>().NN);
 
-                agentPopulation[i].GetComponent<Agents>().NN.Mutate(-1f, 1f, mutationRate);
+                iAgent.NN.Mutate(-1f, 1f, mutationRate);
             }
 
             return true;
@@ -103,7 +107,9 @@ public class PopulationController : MonoBehaviour
     {
         agentPopulation = agentPopulation.OrderByDescending(e => e.GetComponent<Agents>().Score).ToList();
 
-        if (agentPopulation[0].GetComponent<Agents>().Attempts >= maxAttempts)
+        bestAgent = agentPopulation.First().GetComponent<Agents>();
+
+        if (bestAgent.Attempts >= maxAttempts)
         {
             if (GetScore(0) >= maxAttempts) maxAttempts++;
 
@@ -112,6 +118,7 @@ public class PopulationController : MonoBehaviour
             generation++;
 
             DebugGUI.LogPersistent("generation", "Generation: " + generation.ToString("F0"));
+            DebugGUI.LogPersistent("bestScore", "Last Score: " + bestAgent.Score.ToString("F0"));
 
             return true;
         }
@@ -143,8 +150,8 @@ public class PopulationController : MonoBehaviour
     {
         Gizmos.color = Color.blue;
 
-        Vector3 from = new Vector3(minX, 0f, 0f);
-        Vector3 to = new Vector3(maxX, 0f, 0f);
+        Vector3 from = new(minX, 0f, 0f);
+        Vector3 to = new(maxX, 0f, 0f);
 
         Gizmos.DrawLine(from, to);
 
@@ -153,20 +160,20 @@ public class PopulationController : MonoBehaviour
         Gizmos.DrawSphere(new Vector3(basketX, 0f), 0.25f);
     }
 
-    private void Shoot(GameObject agent)
+    private void Shoot(Agents agent)
     {
-        agent.GetComponent<Agents>().Reset();
+        agent.Reset();
 
         if (maxAttempts > randomPlacementLevel)
         {
-            agent.GetComponent<Agents>().RandomMove(minX, maxX, basketX);
+            agent.RandomMove(minX, maxX, basketX);
         }
         else if (maxAttempts > incrementalPlacementLevel)
         {
-            agent.GetComponent<Agents>().IncrementMove(minX, maxX, basketX);
+            agent.IncrementMove(minX, maxX, basketX);
         }
 
-        agent.GetComponent<Agents>().Shoot(maxForce);
+        agent.Shoot(maxForce);
     }
 
     private void SpawnAgents()
@@ -175,7 +182,7 @@ public class PopulationController : MonoBehaviour
         {
             float startX = (minX + maxX) / 2f;
             //float startX = maxX;
-            Vector3 newPos = new Vector3(startX, ySpawn, 0f);
+            Vector3 newPos = new(startX, ySpawn, 0f);
             agentPopulation.Add(Instantiate(agentsPrefab, newPos, transform.rotation, transform));
 
             agentPopulation[i].GetComponent<Agents>().CreateNetwork();
@@ -196,10 +203,11 @@ public class PopulationController : MonoBehaviour
 
         foreach (GameObject item in agentPopulation)
         {
-            item.GetComponent<Agents>().Init(ballPrefab, basketX, startX, minX, maxX);
+            Agents l_agent = item.GetComponent<Agents>();
+            l_agent.Init(ballPrefab, basketX, startX, minX, maxX);
 
             //item.GetComponent<Agents>().Move(minX, maxX, basketX);
-            item.GetComponent<Agents>().Shoot(maxForce);
+            l_agent.Shoot(maxForce);
         }
 
         maxAttempts = 1;
@@ -222,9 +230,10 @@ public class PopulationController : MonoBehaviour
 
                 foreach (GameObject item in agentPopulation)
                 {
-                    item.GetComponent<Agents>().ResetGen();
+                    Agents agent = item.GetComponent<Agents>();
+                    agent.ResetGen();
 
-                    Shoot(item);
+                    Shoot(agent);
                 }
 
                 attempt = 1;
@@ -233,7 +242,7 @@ public class PopulationController : MonoBehaviour
             {
                 foreach (GameObject item in agentPopulation)
                 {
-                    Shoot(item);
+                    Shoot(item.GetComponent<Agents>());
                 }
 
                 attempt++;

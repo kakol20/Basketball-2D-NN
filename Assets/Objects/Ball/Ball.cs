@@ -13,7 +13,8 @@ public class Ball : MonoBehaviour
     //private bool hitExitTrigger = false;
     //private bool hitTopTrigger = false;
     private float timeElapsed = 0f;
-    private List<Target> hitOrder = new List<Target>();
+
+    private List<Target> hitOrder = new();
     private Rigidbody2D rb;
 
     private enum Target
@@ -23,6 +24,11 @@ public class Ball : MonoBehaviour
 
     public bool HitFloor { get; private set; }
     public bool HitTarget { get; private set; }
+    public float ScoreOffset { get; private set; }
+
+    private const int IdealBounceAmount = 3;
+    private bool CountBounces = true;
+    private int BounceCount = 0;
 
     public void Reset()
     {
@@ -38,6 +44,10 @@ public class Ball : MonoBehaviour
         rb.velocity = Vector2.zero;
 
         timeElapsed = 0f;
+
+        CountBounces = true;
+        BounceCount = 0;
+        ScoreOffset = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -51,6 +61,8 @@ public class Ball : MonoBehaviour
             rb.velocity /= 2f;
             rb.angularVelocity /= 2f;
         }
+
+        if (CountBounces) BounceCount++;
     }
 
     //private void OnTriggerExit2D(Collider2D collision)
@@ -80,6 +92,8 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2)) hitOrder.Add(Target.Top);
         if (collision.gameObject.layer == Mathf.Log(midTargetLayer.value, 2)) hitOrder.Add(Target.Mid);
         if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
+
+        //ClosestDistAtHitTarget = 1f - (collision.gameObject.transform.position - transform.position).magnitude;
     }
 
     // Start is called before the first frame update
@@ -118,7 +132,13 @@ public class Ball : MonoBehaviour
 
                 //if (hitOrder[last] == Target.Exit && hitOrder[last - 1] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
 
-                if (hitOrder[last] == Target.Mid) HitTarget = true;
+                if (hitOrder[last] == Target.Mid)
+                {
+                    HitTarget = true;
+                    CountBounces = false;
+
+                    ScoreOffset = IdealBounceAmount - BounceCount;
+                }
             }
         }
     }
