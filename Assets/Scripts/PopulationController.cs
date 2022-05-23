@@ -118,7 +118,7 @@ public class PopulationController : MonoBehaviour
             generation++;
 
             DebugGUI.LogPersistent("generation", "Generation: " + generation.ToString("F0"));
-            DebugGUI.LogPersistent("bestScore", "Last Score: " + bestAgent.Score.ToString("F0"));
+            DebugGUI.LogPersistent("bestScore", "Last Score: " + bestAgent.Score.ToString("F2"));
 
             return true;
         }

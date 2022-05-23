@@ -4,6 +4,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private float maxWait = 5.0f;
+    [SerializeField] private int IdealBounceAmount = 3;
     [SerializeField] private LayerMask exitTargetLayer;
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask midTargetLayer;
@@ -26,7 +27,6 @@ public class Ball : MonoBehaviour
     public bool HitTarget { get; private set; }
     public float ScoreOffset { get; private set; }
 
-    private const int IdealBounceAmount = 3;
     private bool CountBounces = true;
     private int BounceCount = 0;
 
@@ -137,7 +137,7 @@ public class Ball : MonoBehaviour
                     HitTarget = true;
                     CountBounces = false;
 
-                    ScoreOffset = IdealBounceAmount - BounceCount;
+                    ScoreOffset = (IdealBounceAmount - BounceCount) / (float)IdealBounceAmount;
                 }
             }
         }

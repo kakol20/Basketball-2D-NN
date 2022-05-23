@@ -1827,7 +1827,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 3885192921875145008, guid: 1b4a593f56b44e44dad1ca8c4132dbf3, type: 3}
   maxX: 4
   minX: -10
-  populationSize: 50
+  populationSize: 100
   mutationRate: 0.25
   incrementalPlacementLevel: 5
   randomPlacementLevel: 10
