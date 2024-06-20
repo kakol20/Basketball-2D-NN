@@ -28,6 +28,8 @@ public class Ball : MonoBehaviour {
     public bool HitTarget { get; private set; }
     public float ScoreOffset { get; private set; }
 
+    public bool Success { get; private set; }
+
     private bool CountBounces = true;
     private int BounceCount = 0;
 
@@ -48,6 +50,7 @@ public class Ball : MonoBehaviour {
         CountBounces = true;
         BounceCount = 0;
         ScoreOffset = 0;
+        Success = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -141,12 +144,15 @@ public class Ball : MonoBehaviour {
 
         if (HitTarget) {
             sprite.color = HitColor;
+            Success = true;
         }
         else if (!HitTarget && HitFloor) {
             sprite.color = NoHitColor;
+            Success = false;
         }
         else {
             sprite.color = Color.white;
+            Success = false;
         }
     }
 }

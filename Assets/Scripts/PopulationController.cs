@@ -22,6 +22,7 @@ public class PopulationController : MonoBehaviour {
     [SerializeField] private int populationSize = 1;
 
     private float startX = 0f;
+    private float successRate = 0f;
 
     [Header("Training")]
     [SerializeField][Range(0, 1)] private float mutationRate = 0.1f;
@@ -177,6 +178,7 @@ public class PopulationController : MonoBehaviour {
     private void Start() {
         DebugGUI.LogPersistent("fps", "FPS: " + (1.0f / Time.deltaTime).ToString("F0"));
         DebugGUI.SetGraphProperties("score", "Score", 0, 0, 0, Color.red, true);
+        DebugGUI.SetGraphProperties("successRate", "Success Rate", 0, 0, 0, Color.green, true);
 
         Own.Random.Init(StaticManager.Seed);
 
@@ -203,6 +205,16 @@ public class PopulationController : MonoBehaviour {
         DebugGUI.LogPersistent("fps", "FPS: " + (1.0f / Time.deltaTime).ToString("F0"));
         DebugGUI.LogPersistent("attempt", "Attempt: " + attempt.ToString());
 
+        int successCount = 0;
+        foreach (GameObject item in agentPopulation) {
+            if (item.GetComponent<Agents>().Success) {
+                successCount++;
+            }
+        }
+        successRate = (float)successCount / (float)agentPopulation.Count;
+        successRate *= 100;
+        DebugGUI.LogPersistent("successRateTxt", "Success Rate: " + successRate.ToString("F0") + "%");
+
         if (AllFinished()) {
             if (GenFinished()) {
                 if (!CopyOutlier()) CopyBest();
@@ -223,6 +235,7 @@ public class PopulationController : MonoBehaviour {
 
                 attempt++;
             }
+            DebugGUI.Graph("successRate", successRate);
         }
     }
 }

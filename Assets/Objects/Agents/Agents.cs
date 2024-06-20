@@ -26,6 +26,7 @@ public class Agents : MonoBehaviour {
     public int Attempts { get; private set; }
     public bool IsFinished { get; private set; } = false;
     public float Score { get; private set; }
+    public bool Success { get; private set; }
 
     public void CreateNetwork() {
         NN = new NeuralNetwork(layers);
@@ -182,5 +183,7 @@ public class Agents : MonoBehaviour {
                 }
             }
         }
+
+        Success = currentBall.GetComponent<Ball>().Success;
     }
 }
