@@ -1,4 +1,4 @@
-const cacheName = "kakol20-Basketball 2D NN-0.8.0";
+const cacheName = "kakol20-Basketball 2D NN-0.8.1";
 const contentToCache = [
     "Build/docs.loader.js",
     "Build/docs.framework.js",
