@@ -8,16 +8,14 @@
 
 using UnityEngine;
 
-namespace UnityLibrary
-{
-    public class ScreenEdgeColliders : MonoBehaviour
-    {
+namespace UnityLibrary {
+
+    public class ScreenEdgeColliders : MonoBehaviour {
         private Camera cam;
         private EdgeCollider2D edge;
         private Vector2[] edgePoints;
 
-        void Awake()
-        {
+        private void Awake() {
             if (Camera.main == null) Debug.LogError("Camera.main not found, failed to create edge colliders");
             else cam = Camera.main;
 
@@ -33,8 +31,7 @@ namespace UnityLibrary
 
         //Use this if you're okay with using the global fields and code in Awake() (more efficient)
         //You can just ignore/delete StandaloneAddCollider() if thats the case
-        void AddCollider()
-        {
+        private void AddCollider() {
             //Vector2's for the corners of the screen
             Vector2 bottomLeft = cam.ScreenToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
             Vector2 topRight = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth, cam.pixelHeight * 2f, cam.nearClipPlane));
