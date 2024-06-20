@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Agents : MonoBehaviour
-{
+public class Agents : MonoBehaviour {
     [SerializeField] private float jumpForce = 320.0f;
     [SerializeField] private float maxHorizontalVelocity = 1.34f;
     [SerializeField] private float maxSpin = 180f; // in degrees
@@ -28,8 +27,7 @@ public class Agents : MonoBehaviour
     public bool IsFinished { get; private set; } = false;
     public float Score { get; private set; }
 
-    public void CreateNetwork()
-    {
+    public void CreateNetwork() {
         NN = new NeuralNetwork(layers);
 
         NN.Randomise(-1f, 1f);
@@ -41,8 +39,7 @@ public class Agents : MonoBehaviour
     /// <param name="minX"></param>
     /// <param name="maxX"></param>
     /// <param name="basketX"></param>
-    public void IncrementMove(float minX, float maxX, float basketX)
-    {
+    public void IncrementMove(float minX, float maxX, float basketX) {
         float newX = transform.position.x + 1;
 
         if (newX > maxX) newX = minX;
@@ -55,8 +52,7 @@ public class Agents : MonoBehaviour
         transform.position = newPos;
     }
 
-    public void Init(GameObject ballPrefab, float basketX, float startX, float minX, float maxX)
-    {
+    public void Init(GameObject ballPrefab, float basketX, float startX, float minX, float maxX) {
         currentBall = Instantiate(ballPrefab, transform.position, transform.rotation, transform);
 
         // calculate distance
@@ -69,8 +65,7 @@ public class Agents : MonoBehaviour
     /// <param name="minX"></param>
     /// <param name="maxX"></param>
     /// <param name="basketX"></param>
-    public void RandomMove(float minX, float maxX, float basketX)
-    {
+    public void RandomMove(float minX, float maxX, float basketX) {
         float newX = Own.Random.Range(minX, maxX);
 
         CalculateDistanceToBasket(basketX, newX, minX, maxX);
@@ -81,24 +76,20 @@ public class Agents : MonoBehaviour
         transform.position = newPos;
     }
 
-    public void Reset()
-    {
+    public void Reset() {
         IsFinished = false;
 
         //Destroy(currentBall);
         currentBall.GetComponent<Ball>().Reset();
     }
 
-    public void ResetGen()
-    {
+    public void ResetGen() {
         Score = 0;
         Attempts = 0;
     }
 
-    public void Shoot(float maxForce)
-    {
-        if (!HasShot)
-        {
+    public void Shoot(float maxForce) {
+        if (!HasShot) {
             currentBall.transform.position = transform.position;
 
             //float x = Own.Random.Range(0f, 1f) * maxForce;
@@ -123,21 +114,19 @@ public class Agents : MonoBehaviour
         }
     }
 
-    private void CalculateDistanceToBasket(float basketX, float newX, float minX, float maxX)
-    {
+    private void CalculateDistanceToBasket(float basketX, float newX, float minX, float maxX) {
         float distance = Mathf.Abs(basketX - newX);
 
         float maxDistance = Mathf.Max(Mathf.Abs(basketX - minX), Mathf.Abs(basketX - maxX));
 
         distanceToBasket = Own.Math.Map(distance, 0f, maxDistance, -1f, 1f);
     }
-    private void FixedUpdate()
-    {
+
+    private void FixedUpdate() {
         ManualMove();
     }
 
-    private void ManualMove()
-    {
+    private void ManualMove() {
         //DebugGUI.LogPersistent("hAxis", "Horizontal Axis: " + Input.GetAxis("Horizontal").ToString("F2"));
         //DebugGUI.LogPersistent("vAxis", "Vertical Axis: " + Input.GetAxis("Vertical").ToString("F2"));
 
@@ -148,8 +137,7 @@ public class Agents : MonoBehaviour
         Vector2 oldVelocity = rb.velocity;
         oldVelocity.y = 0;
 
-        if (Mathf.Abs(oldVelocity.x) > maxHorizontalVelocity)
-        {
+        if (Mathf.Abs(oldVelocity.x) > maxHorizontalVelocity) {
             oldVelocity.Normalize();
             rb.velocity = new Vector2(oldVelocity.x * maxHorizontalVelocity, rb.velocity.y);
         }
@@ -165,29 +153,23 @@ public class Agents : MonoBehaviour
     //    transform.position = newPos;
     //}
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
+    private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2)) grounded = true;
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
+    private void OnCollisionExit2D(Collision2D collision) {
         if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2)) grounded = false;
     }
 
     // Start is called before the first frame update
-    private void Start()
-    {
+    private void Start() {
         rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    private void Update()
-    {
-        if (HasShot)
-        {
-            if (currentBall.GetComponent<Ball>().HitFloor)
-            {
+    private void Update() {
+        if (HasShot) {
+            if (currentBall.GetComponent<Ball>().HitFloor) {
                 // reset
 
                 IsFinished = true;
@@ -195,8 +177,7 @@ public class Agents : MonoBehaviour
 
                 Attempts++;
 
-                if (currentBall.GetComponent<Ball>().HitTarget)
-                {
+                if (currentBall.GetComponent<Ball>().HitTarget) {
                     Score += 1 + currentBall.GetComponent<Ball>().ScoreOffset;
                 }
             }

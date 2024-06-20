@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour
-{
+public class Ball : MonoBehaviour {
     [SerializeField] private float maxWait = 5.0f;
     [SerializeField] private int IdealBounceAmount = 3;
     [SerializeField] private LayerMask exitTargetLayer;
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask midTargetLayer;
     [SerializeField] private LayerMask topTargetLayer;
+    [SerializeField] private Color HitColor = Color.green;
+    [SerializeField] private Color NoHitColor = Color.red;
 
     //private bool hitEntryTrigger = false;
     //private bool hitExitTrigger = false;
@@ -17,9 +18,9 @@ public class Ball : MonoBehaviour
 
     private List<Target> hitOrder = new();
     private Rigidbody2D rb;
+    private SpriteRenderer sprite;
 
-    private enum Target
-    {
+    private enum Target {
         Top, Mid, Exit
     }
 
@@ -30,8 +31,7 @@ public class Ball : MonoBehaviour
     private bool CountBounces = true;
     private int BounceCount = 0;
 
-    public void Reset()
-    {
+    public void Reset() {
         HitFloor = false;
         HitTarget = false;
 
@@ -50,10 +50,8 @@ public class Ball : MonoBehaviour
         ScoreOffset = 0;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2) && !HitFloor)
-        {
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.layer == Mathf.Log(floorLayer.value, 2) && !HitFloor) {
             //DebugGUI.LogPersistent("hitFloor", "Ball has hit floor"); // for testing only
 
             HitFloor = true;
@@ -87,8 +85,7 @@ public class Ball : MonoBehaviour
     //    //if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
     //}
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
+    private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.layer == Mathf.Log(topTargetLayer.value, 2)) hitOrder.Add(Target.Top);
         if (collision.gameObject.layer == Mathf.Log(midTargetLayer.value, 2)) hitOrder.Add(Target.Mid);
         if (collision.gameObject.layer == Mathf.Log(exitTargetLayer.value, 2)) hitOrder.Add(Target.Exit);
@@ -97,17 +94,19 @@ public class Ball : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    private void Start()
-    {
+    private void Start() {
         HitFloor = false;
         HitTarget = false;
 
         rb = GetComponent<Rigidbody2D>();
+
+        sprite = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    private void Update() {
         //if (HitTarget)
         //{
         //    DebugGUI.LogPersistent("hitTarget", "Ball has hit target");
@@ -124,22 +123,30 @@ public class Ball : MonoBehaviour
 
         //if (hitEntryTrigger && hitExitTrigger && hitTopTrigger) HitTarget = true;
 
-        if (hitOrder.Count >= 3)
-        {
-            if (hitOrder[0] == Target.Top) // ball must hit top first
-            {
+        if (hitOrder.Count >= 3) {
+            // ball must hit top first
+            if (hitOrder[0] == Target.Top) {
                 int last = hitOrder.Count - 1;
 
                 //if (hitOrder[last] == Target.Exit && hitOrder[last - 1] == Target.Mid) HitTarget = true; // doesn't matter what happens in between
 
-                if (hitOrder[last] == Target.Mid)
-                {
+                if (hitOrder[last] == Target.Mid) {
                     HitTarget = true;
                     CountBounces = false;
 
                     ScoreOffset = (IdealBounceAmount - BounceCount) / (float)IdealBounceAmount;
                 }
             }
+        }
+
+        if (HitTarget) {
+            sprite.color = HitColor;
+        }
+        else if (!HitTarget && HitFloor) {
+            sprite.color = NoHitColor;
+        }
+        else {
+            sprite.color = Color.white;
         }
     }
 }
