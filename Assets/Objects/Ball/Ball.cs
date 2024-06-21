@@ -8,8 +8,12 @@ public class Ball : MonoBehaviour {
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask midTargetLayer;
     [SerializeField] private LayerMask topTargetLayer;
-    [SerializeField] private Color HitColor = Color.green;
-    [SerializeField] private Color NoHitColor = Color.red;
+    //[SerializeField] private Color HitColor = Color.green;
+    //[SerializeField] private Color NoHitColor = Color.red;
+
+    [SerializeField] private Sprite normalBall;
+    [SerializeField] private Sprite greenBall;
+    [SerializeField] private Sprite redBall;
 
     //private bool hitEntryTrigger = false;
     //private bool hitExitTrigger = false;
@@ -143,15 +147,18 @@ public class Ball : MonoBehaviour {
         }
 
         if (HitTarget) {
-            sprite.color = HitColor;
+            //sprite.color = HitColor;
+            sprite.sprite = greenBall;
             Success = true;
         }
         else if (!HitTarget && HitFloor) {
-            sprite.color = NoHitColor;
+            //sprite.color = NoHitColor;
+            sprite.sprite = redBall;
             Success = false;
         }
         else {
-            sprite.color = Color.white;
+            //sprite.color = Color.white;
+            sprite.sprite = normalBall;
             Success = false;
         }
     }
