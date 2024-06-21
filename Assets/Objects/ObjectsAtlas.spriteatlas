@@ -23,7 +23,7 @@ SpriteAtlas:
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: DefaultTexturePlatform
-      m_MaxTextureSize: 4096
+      m_MaxTextureSize: 1024
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
       m_TextureCompression: 2
@@ -45,21 +45,29 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: 8ea4105805f5c9c4fb69f64af48f6d9a, type: 3}
+    - {fileID: 2800000, guid: 7ed1a81883999bb4390967e0e41bde30, type: 3}
     - {fileID: 2800000, guid: 78b822977318f054db113801e03b0854, type: 3}
+    - {fileID: 2800000, guid: 882cd67e043b3ca4daf442548634eac1, type: 3}
+    - {fileID: 2800000, guid: 5c4e9407f5746c747a6e73b4919071f2, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
+    - 5c4e9407f5746c747a6e73b4919071f2: 21300000
     - 78b822977318f054db113801e03b0854: 21300000
-    - 8ea4105805f5c9c4fb69f64af48f6d9a: 21300000
+    - 7ed1a81883999bb4390967e0e41bde30: 21300000
+    - 882cd67e043b3ca4daf442548634eac1: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 5c4e9407f5746c747a6e73b4919071f2, type: 3}
   - {fileID: 21300000, guid: 78b822977318f054db113801e03b0854, type: 3}
-  - {fileID: 21300000, guid: 8ea4105805f5c9c4fb69f64af48f6d9a, type: 3}
+  - {fileID: 21300000, guid: 7ed1a81883999bb4390967e0e41bde30, type: 3}
+  - {fileID: 21300000, guid: 882cd67e043b3ca4daf442548634eac1, type: 3}
   m_PackedSpriteNamesToIndex:
+  - basketball_red
   - agentSprite
-  - BallSprite
+  - basketball_orange
+  - basketball_green
   m_RenderDataMap: {}
   m_Tag: ObjectsAtlas
   m_IsVariant: 0
