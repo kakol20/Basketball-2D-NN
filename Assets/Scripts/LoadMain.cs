@@ -16,6 +16,9 @@ public class LoadMain : MonoBehaviour {
 
         if (seedInput.text.Length > 0) {
             StaticManager.Seed = int.Parse(seedInput.text);
+        } else {
+            System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            StaticManager.Seed = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
         }
 
         print(StaticManager.Seed);
